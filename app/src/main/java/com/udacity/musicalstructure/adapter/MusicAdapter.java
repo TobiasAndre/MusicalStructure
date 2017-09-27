@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +14,19 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.udacity.musicalstructure.R;
 import com.udacity.musicalstructure.model.Music;
+import com.udacity.musicalstructure.util.ImageRepository;
 
 import java.util.ArrayList;
 
 /**
- * Created by tobia on 17/09/2017.
+ * Created by Tobias Andre on 17/09/2017.
  */
 
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> {
 
     private final ArrayList<Music> mMusics;
     private final Callbacks mCallbacks;
+    ImageRepository mImageRepository = new ImageRepository();
 
     public interface Callbacks {
         void open(Music music, int position);
@@ -39,8 +42,6 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> 
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_music, parent, false);
         final Context context = view.getContext();
-
-
 
         return new ViewHolder(view);
     }
@@ -58,9 +59,11 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> 
 
         holder.mTitleAlbum.setText(music.getAlbum());
         holder.mTitleMusic.setText(music.getName());
-        if(!music.getThumbnail().isEmpty()){
-            //Bitmap myBitmap = BitmapFactory.decodeFile(music.getThumbnail());
-            //holder.mPosterView.setImageBitmap(myBitmap);
+
+        String imgUrl = mImageRepository.getImage(music.getAlbum()).blockingGet();
+        if(!TextUtils.isEmpty(imgUrl)){
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgUrl);
+            holder.mPosterView.setImageBitmap(myBitmap);
         }
     }
 
@@ -92,5 +95,4 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> 
             mTitleMusic.setVisibility(View.GONE);
         }
     }
-
 }

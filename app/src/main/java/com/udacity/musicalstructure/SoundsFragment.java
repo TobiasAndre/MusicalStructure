@@ -58,6 +58,8 @@ public class SoundsFragment extends Fragment implements MusicAdapter.Callbacks {
         mMusics.add(music);
 
 
+
+
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 

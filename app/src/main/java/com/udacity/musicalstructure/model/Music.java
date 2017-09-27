@@ -1,7 +1,5 @@
 package com.udacity.musicalstructure.model;
 
-import android.graphics.Bitmap;
-
 
 /**
  * Created by Tobias Andre on 17/09/2017.
