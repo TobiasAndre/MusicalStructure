@@ -63,7 +63,7 @@ public class SoundsFragment extends Fragment implements MusicAdapter.Callbacks {
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
-        mAdapter = new MusicAdapter(mMusics, this);
+        //mAdapter = new MusicAdapter(mMusics, this);
         mRecyclerView.setAdapter(mAdapter);
 
 
@@ -74,4 +74,5 @@ public class SoundsFragment extends Fragment implements MusicAdapter.Callbacks {
     public void open(Music music, int position) {
 
     }
+
 }
