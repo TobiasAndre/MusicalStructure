@@ -10,6 +10,7 @@ public class Music {
     private int id;
     private String name;
     private String album;
+    private String artist;
     private String thumbnail;
 
     public int getId() {
@@ -42,5 +43,13 @@ public class Music {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public String getArtist() {
+        return artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
     }
 }

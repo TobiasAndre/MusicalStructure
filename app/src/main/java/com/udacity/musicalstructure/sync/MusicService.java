@@ -2,6 +2,7 @@ package com.udacity.musicalstructure.sync;
 
 import com.udacity.musicalstructure.model.Music;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -12,6 +13,6 @@ import retrofit2.http.GET;
  */
 
 public interface MusicService {
-    @GET("music.json")
-    Call<List<Music>> discoverMusics();
+    @GET("musics")
+    Call<ArrayList<Music>> discoverMusics();
 }

@@ -59,10 +59,12 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> 
 
         holder.mTitleAlbum.setText(music.getAlbum());
         holder.mTitleMusic.setText(music.getName());
+        holder.mArtistName.setText("-  "+music.getArtist());
 
-        String imgUrl = mImageRepository.getImage(music.getAlbum()).blockingGet();
-        if(!TextUtils.isEmpty(imgUrl)){
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgUrl);
+
+        if(!TextUtils.isEmpty(music.getThumbnail())){
+            Bitmap myBitmap = BitmapFactory.decodeFile(music.getThumbnail());
+
             holder.mPosterView.setImageBitmap(myBitmap);
         }
     }
@@ -78,11 +80,13 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> 
         ImageView mPosterView;
         TextView mTitleAlbum;
         TextView mTitleMusic;
+        TextView mArtistName;
 
         public ViewHolder(View view) {
             super(view);
             mTitleMusic = (TextView)view.findViewById(R.id.tv_music_tittle);
-            mTitleAlbum = (TextView)view.findViewById(R.id.tv_album_tittle);
+            mTitleAlbum = (TextView)view.findViewById(R.id.tv_album_name);
+            mArtistName = (TextView)view.findViewById(R.id.tv_artist_name);
             mView = view;
         }
 
@@ -93,6 +97,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> 
             mPosterView.setVisibility(View.INVISIBLE);
             mTitleAlbum.setVisibility(View.GONE);
             mTitleMusic.setVisibility(View.GONE);
+            mArtistName.setVisibility(View.GONE);
         }
     }
 }

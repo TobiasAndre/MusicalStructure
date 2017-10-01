@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.udacity.musicalstructure.model.Music;
+import com.udacity.musicalstructure.util.ImageRepository;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by Tobias Andre on 26/09/17.
  */
 
-public class GetMusicTask extends AsyncTask<Void, Void, List<Music>> {
+public class GetMusicTask extends AsyncTask<Void, Void, ArrayList<Music>> {
 
     public static String TAG = GetMusicTask.class.getSimpleName();
 
@@ -30,7 +31,7 @@ public class GetMusicTask extends AsyncTask<Void, Void, List<Music>> {
 
     public static class NotifyTaskCompletedCommand implements CommandExec {
         private GetMusicTask.Listener mListener;
-        private List<Music> mMusics;
+        private ArrayList<Music> mMusics;
 
         public NotifyTaskCompletedCommand(GetMusicTask.Listener listener) {
             mListener = listener;
@@ -41,7 +42,7 @@ public class GetMusicTask extends AsyncTask<Void, Void, List<Music>> {
             mListener.onGetFinished(this);
         }
 
-        public List<Music> getMusics() {
+        public ArrayList<Music> getMusics() {
             return mMusics;
         }
     }
@@ -50,29 +51,38 @@ public class GetMusicTask extends AsyncTask<Void, Void, List<Music>> {
         mCommand = command;
     }
 
+
     @Override
-    protected void onPostExecute(List<Music> musics) {
-        if (musics != null) {
-            mCommand.mMusics = musics;
+    protected void onPostExecute(ArrayList<Music> movies) {
+        if (movies != null) {
+            mCommand.mMusics = movies;
         } else {
             mCommand.mMusics = new ArrayList<>();
         }
         mCommand.execute();
+
     }
 
     @Override
-    protected List<Music> doInBackground(Void... params) {
+    protected ArrayList<Music> doInBackground(Void... params) {
+
+        ImageRepository mImageRepository = new ImageRepository();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.0.102/musics")
+                .baseUrl("http://192.168.0.102:8080/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         MusicService service = retrofit.create(MusicService.class);
-        Call<List<Music>> call = service.discoverMusics();
+        Call<ArrayList<Music>> call = service.discoverMusics();
         try {
-            Response<List<Music>> response = call.execute();
-            List<Music> musics = response.body();
+            Response<ArrayList<Music>> response = call.execute();
+            ArrayList<Music> musics = response.body();
+            for(Music m:musics){
+                String imgUrl = mImageRepository.getImage(m.getAlbum()).blockingGet();
+                m.setThumbnail(imgUrl);
+            }
+
             return musics;
 
         } catch (IOException e) {

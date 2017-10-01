@@ -17,14 +17,7 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
-import com.udacity.musicalstructure.model.Music;
-import com.udacity.musicalstructure.sync.CommandExec;
-import com.udacity.musicalstructure.sync.GetMusicTask;
-import com.udacity.musicalstructure.util.NetworkUtils;
-
-import java.util.List;
-
-public class MainPlayerActivity extends AppCompatActivity implements GetMusicTask.Listener {
+public class MainPlayerActivity extends AppCompatActivity  {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -59,7 +52,6 @@ public class MainPlayerActivity extends AppCompatActivity implements GetMusicTas
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        getMusics();
     }
 
     @Override
@@ -82,14 +74,6 @@ public class MainPlayerActivity extends AppCompatActivity implements GetMusicTas
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onGetFinished(CommandExec command) {
-        if (command instanceof GetMusicTask.NotifyTaskCompletedCommand) {
-            List<Music> musicList =((GetMusicTask.NotifyTaskCompletedCommand) command).getMusics();
-            String musicas = "";
-        }
     }
 
     /**
@@ -168,17 +152,4 @@ public class MainPlayerActivity extends AppCompatActivity implements GetMusicTas
             return null;
         }
     }
-
-    private void getMusics(){
-        if(NetworkUtils.isNetworkConnected(this)){
-            GetMusicTask.NotifyTaskCompletedCommand command =
-                    new GetMusicTask.NotifyTaskCompletedCommand(null);
-            new GetMusicTask(command).execute();
-        }else{
-
-        }
-    }
-
-
-
 }

@@ -13,14 +13,18 @@ import android.widget.ImageView;
 
 import com.udacity.musicalstructure.adapter.MusicAdapter;
 import com.udacity.musicalstructure.model.Music;
+import com.udacity.musicalstructure.sync.CommandExec;
+import com.udacity.musicalstructure.sync.GetMusicTask;
+import com.udacity.musicalstructure.util.NetworkUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Tobias Andre on 16/09/2017.
  */
 
-public class SoundsFragment extends Fragment implements MusicAdapter.Callbacks {
+public class SoundsFragment extends Fragment implements MusicAdapter.Callbacks, GetMusicTask.Listener {
 
     RecyclerView mRecyclerView;
     MusicAdapter mAdapter;
@@ -42,29 +46,10 @@ public class SoundsFragment extends Fragment implements MusicAdapter.Callbacks {
         mRecyclerView = (RecyclerView)rootView.findViewById(R.id.rv_musics);
 
 
-        ArrayList<Music> mMusics = new ArrayList<>();
-        Music music = new Music();
-        music.setAlbum("Reise,reise");
-        music.setId(0);
-        music.setName("Ohne Dich");
-        music.setThumbnail("");
-        mMusics.add(music);
-
-        music = new Music();
-        music.setAlbum("Mutter");
-        music.setId(0);
-        music.setName("Sohne");
-        music.setThumbnail("rammstein.jpg");
-        mMusics.add(music);
-
-
-
-
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
-        //mAdapter = new MusicAdapter(mMusics, this);
-        mRecyclerView.setAdapter(mAdapter);
+        getMusics();
 
 
         return rootView;
@@ -75,4 +60,25 @@ public class SoundsFragment extends Fragment implements MusicAdapter.Callbacks {
 
     }
 
+    private void getMusics(){
+        if(NetworkUtils.isNetworkConnected(this.getContext())){
+
+            GetMusicTask.NotifyTaskCompletedCommand command =
+                    new GetMusicTask.NotifyTaskCompletedCommand(this);
+            new GetMusicTask(command).execute();
+
+        }else{
+
+        }
+    }
+
+    @Override
+    public void onGetFinished(CommandExec command) {
+        if (command instanceof GetMusicTask.NotifyTaskCompletedCommand) {
+            ArrayList<Music> musicList = ((GetMusicTask.NotifyTaskCompletedCommand) command).getMusics();
+            String musicas = "";
+            mAdapter = new MusicAdapter(musicList, this);
+            mRecyclerView.setAdapter(mAdapter);
+        }
+    }
 }
